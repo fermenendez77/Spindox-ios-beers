@@ -25,12 +25,8 @@ class BeerListViewController: UIViewController {
         viewModel.fetchData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-    }
-    
     private func configureNavigationBar() {
-        navigationController?.title = "Beers"
+        self.title = "Beers"
     }
     
     private func configureSearchView() {
