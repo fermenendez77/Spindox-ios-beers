@@ -22,10 +22,11 @@ class BeerListViewController: UIViewController {
         configureNavigationBar()
         configureSearchView()
         configureBindings()
+        viewModel.fetchData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        viewModel.fetchData()
+        
     }
     
     private func configureNavigationBar() {
@@ -104,7 +105,9 @@ extension BeerListViewController : UITableViewDelegate {
     
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
-        
+        let detailVC = viewModel.didSelectRow(at: indexPath)
+        navigationController?.pushViewController(detailVC, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
@@ -120,12 +123,8 @@ extension BeerListViewController : UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: BeerTableViewCell.identifier,
                                                  for: indexPath) as! BeerTableViewCell
-        let beer = viewModel.beer(for: indexPath)
-        cell.nameLabel.text = beer.name
-        cell.descLabel.text = beer.beerDescription
-        cell.tagLineLabel.text = beer.tagline
-        cell.alcoholLabel.text = String(beer.abv)
-        cell.image = beer.imageURL
+        
+        cell.viewModel = viewModel.cellViewModel(for: indexPath)
         return cell
     }
 }
@@ -133,8 +132,7 @@ extension BeerListViewController : UITableViewDataSource {
 extension BeerListViewController : UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text,
-              text.count > 0 else {
+        guard let text = searchController.searchBar.text else {
             return
         }
         viewModel.filter(with: text)

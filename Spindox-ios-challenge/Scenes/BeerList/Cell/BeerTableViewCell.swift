@@ -9,6 +9,14 @@ import UIKit
 
 class BeerTableViewCell: UITableViewCell {
     
+    var viewModel : BeerCellViewModel? {
+        didSet {
+            configureImageBinding()
+            viewModel?.fetchImage()
+            configureLabels()
+        }
+    }
+    
     @IBOutlet weak var imageBeerView: UIImageView!
     @IBOutlet weak var tagLineLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
@@ -21,30 +29,27 @@ class BeerTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
-    var image : String = "" {
-        didSet {
-            let url = URL(string: image)!
-            let task = URLSession.shared.dataTask(with: url) { [weak self] data,
-                                                    response, error in
-                guard let self = self,
-                      let data = data,
-                      let image = UIImage(data: data) else {
-                          return
-                }
-                DispatchQueue.main.async {
-                    self.imageBeerView.image = image
-                }
+    private func configureLabels() {
+        nameLabel.text = viewModel?.name
+        descLabel.text = viewModel?.description
+        tagLineLabel.text = viewModel?.tagLine
+        alcoholLabel.text = viewModel?.alcohol
+        ibuLabel.text = viewModel?.ibu
+    }
+    
+    private func configureImageBinding() {
+        viewModel?.image.bind { [weak self] image in
+            guard let self = self else {
+                return
             }
-            task.resume()
+            self.imageBeerView.image = image
         }
     }
-    
 }

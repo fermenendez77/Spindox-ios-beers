@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 // MARK: - BeerElement
 struct Beer: Codable {
@@ -43,6 +44,8 @@ struct Beer: Codable {
         case brewersTips = "brewers_tips"
         case contributedBy = "contributed_by"
     }
+    
+    var image : UIImage?
 }
 
 // MARK: - BoilVolume

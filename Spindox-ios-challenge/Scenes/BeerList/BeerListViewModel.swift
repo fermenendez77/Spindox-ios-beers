@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import UIKit
 
 class BeerListViewModel {
     
     // Dependencies
     let dataFetcher : BeerListDataFetcher
+    let imageFetcher : BeerImageFetcher
     
     // Data Binding
     public var beers : [Beer] = []
@@ -19,8 +21,12 @@ class BeerListViewModel {
     public var isError : Binding<Bool> = Binding(false)
     public var beersCount : Int { filteredBeers.value.count }
     
-    public init(dataFetcher : BeerListDataFetcher = BeerListDataFetcherImp()) {
+    private var cellsViewModels : [Int: BeerCellViewModel ] = [:]
+    
+    public init(dataFetcher : BeerListDataFetcher = BeerListDataFetcherImp(),
+                imageFetcher : BeerImageFetcher = BeerImageFetcherImp()) {
         self.dataFetcher = dataFetcher
+        self.imageFetcher = imageFetcher
     }
     
     func fetchData() {
@@ -45,12 +51,32 @@ class BeerListViewModel {
         }
     }
     
-    
-    func beer(for indexPath : IndexPath) -> Beer {
-        return filteredBeers.value[indexPath.row]
+    public func didSelectRow(at indexPath : IndexPath) -> UIViewController {
+        let beer = beers[indexPath.row]
+        let viewModel = BeerDetailViewModel(with: beer)
+        let detailVC = BeerDetailViewController(viewModel: viewModel)
+        return detailVC
     }
     
-    func filter(with value : String) {
-        filteredBeers.value = beers.filter { $0.name.contains(value) }
+    public func cellViewModel(for indexPath : IndexPath) -> BeerCellViewModel {
+        let beer = filteredBeers.value[indexPath.row]
+        if let viewModel = cellsViewModels[beer.id] {
+            return viewModel
+        } else {
+            let viewModel = BeerCellViewModel(with: beer)
+            cellsViewModels[beer.id] = viewModel
+            return viewModel
+        }
+    }
+
+    
+    public func filter(with value : String) {
+        if value.count == 0 {
+            filteredBeers.value = beers
+        } else {
+            let text = value.lowercased()
+            filteredBeers.value = filteredBeers.value.filter { $0.name.lowercased().contains(text)
+            }
+        }
     }
 }

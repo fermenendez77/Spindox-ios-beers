@@ -37,9 +37,9 @@ class BeerListViewModelTests: XCTestCase {
         mockDataFetcher.isError = false
         let viewModel = BeerListViewModel(dataFetcher: mockDataFetcher)
         viewModel.fetchData()
-        viewModel.filter(with: "Buzz")
+        viewModel.filter(with: "Pilsen")
         XCTAssert(viewModel.filteredBeers.value.count == 1)
-        
+        XCTAssert(viewModel.filteredBeers.value.first!.name.contains("Pilsen"))
     }
 }
 
