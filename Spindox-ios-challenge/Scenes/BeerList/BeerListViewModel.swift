@@ -21,7 +21,7 @@ class BeerListViewModel {
     public var isError : Binding<Bool> = Binding(false)
     public var beersCount : Int { filteredBeers.value.count }
     
-    private var cellsViewModels : [Int: BeerCellViewModel ] = [:]
+    internal var cellsViewModels : [Int: BeerCellViewModel ] = [:]
     
     public init(dataFetcher : BeerListDataFetcher = BeerListDataFetcherImp(),
                 imageFetcher : BeerImageFetcher = BeerImageFetcherImp()) {
@@ -54,6 +54,7 @@ class BeerListViewModel {
     public func didSelectRow(at indexPath : IndexPath) -> UIViewController {
         let beer = beers[indexPath.row]
         let viewModel = BeerDetailViewModel(with: beer)
+        viewModel.image = cellsViewModels[beer.id]?.image.value
         let detailVC = BeerDetailViewController(viewModel: viewModel)
         return detailVC
     }

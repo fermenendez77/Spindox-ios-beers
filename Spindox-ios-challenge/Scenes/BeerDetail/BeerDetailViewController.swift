@@ -45,12 +45,7 @@ class BeerDetailViewController: UIViewController {
     }
     
     func configureImage() {
-        viewModel.image.bind { [weak self] image in
-            guard let self = self,
-                  let image = image else {
-                      return
-            }
-            self.beerImageView.image = image
-        }
+        let image = viewModel.image ?? UIImage(named: "placeholder")
+        beerImageView.image = image
     }
 }

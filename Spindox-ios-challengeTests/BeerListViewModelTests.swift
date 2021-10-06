@@ -33,13 +33,24 @@ class BeerListViewModelTests: XCTestCase {
     }
     
     func testFilter() throws {
+        let target = "Pilsen"
         let mockDataFetcher = MockBeerListDataFetcher()
         mockDataFetcher.isError = false
         let viewModel = BeerListViewModel(dataFetcher: mockDataFetcher)
         viewModel.fetchData()
-        viewModel.filter(with: "Pilsen")
+        viewModel.filter(with: target)
         XCTAssert(viewModel.filteredBeers.value.count == 1)
-        XCTAssert(viewModel.filteredBeers.value.first!.name.contains("Pilsen"))
+        XCTAssert(viewModel.filteredBeers.value.first!.name.contains(target))
+    }
+    
+    func testCellViewModel() throws {
+        let mockDataFetcher = MockBeerListDataFetcher()
+        mockDataFetcher.isError = false
+        let viewModel = BeerListViewModel(dataFetcher: mockDataFetcher)
+        viewModel.fetchData()
+        let cellViewModel = viewModel.cellViewModel(for: IndexPath(row: 0, section: 0))
+        XCTAssertNotNil(cellViewModel)
+        XCTAssertTrue(viewModel.cellsViewModels.count == 1, "The stored viewModels in cellsVIewModels should be 1, because cellViewModel(for:) was called one time")
     }
 }
 

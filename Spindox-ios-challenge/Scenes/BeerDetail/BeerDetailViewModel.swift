@@ -17,7 +17,6 @@ class BeerDetailViewModel {
          imageFetcher : BeerImageFetcher = BeerImageFetcherImp()) {
         self.beer = beer
         self.imageFetcher = imageFetcher
-        fetchImage()
     }
     
     var name : String { beer.name }
@@ -29,20 +28,6 @@ class BeerDetailViewModel {
     }
     
     var tips : String { beer.brewersTips }
-    var image : Binding<UIImage?> = Binding(nil)
-    
-    private func fetchImage() {
-        imageFetcher.image(from : beer.imageURL) { [weak self] result in
-            guard let self = self else {
-                return
-            }
-            
-            switch result {
-            case .success(let image):
-                self.image.value = image
-            case .failure(_):
-                break
-            }
-        }
-    }
+    var image : UIImage?
+
 }
