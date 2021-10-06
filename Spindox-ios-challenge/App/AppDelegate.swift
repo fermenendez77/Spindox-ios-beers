@@ -15,7 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        let rootVC = BeerListViewController()
+        let viewModel = BeerListViewModel()
+        let rootVC = BeerListViewController(viewModel: viewModel)
         let navigationView = UINavigationController(rootViewController: rootVC)
         self.window?.rootViewController = navigationView
         self.window?.makeKeyAndVisible()
