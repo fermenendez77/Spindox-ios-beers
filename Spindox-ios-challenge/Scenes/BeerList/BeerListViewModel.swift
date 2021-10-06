@@ -76,7 +76,7 @@ class BeerListViewModel {
             filteredBeers.value = beers
         } else {
             let text = value.lowercased()
-            filteredBeers.value = filteredBeers.value.filter { $0.name.lowercased().contains(text)
+            filteredBeers.value = beers.filter { $0.name.lowercased().contains(text)
             }
         }
     }
